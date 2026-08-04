@@ -16,5 +16,13 @@ st.write(df[['total_bill', 'tip']].describe())
 st.subheader('Distribution of the total bill')
 fig,ax=plt.subplots()
 ax.hist(df['total bill'],bins=20)
-ax.set_xlabel(
-         
+ax.set_xlabel('Total Bill($)')
+ax.set_ylabel('Number of meals')
+st.pyplot(fig, clear_figure=True)
+
+st.subheader('Bill size vs. tip')
+fig2,ax2=plt.subplots()
+ax.scatter(df['total bill'],df['tip'])
+ax.set_xlabel('Total Bill($)')
+ax.set_ylabel('Tip')
+st.pyplot(fig2, clear_figure=True)         
