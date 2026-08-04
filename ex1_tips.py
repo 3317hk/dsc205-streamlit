@@ -9,7 +9,7 @@ df=pd.read_csv(URL)
 st.title('Restaurant Tips')
 st.markdown('This talks about the day,time,size,total bill and tips on that day')
 st.subheader('The data')
-st.dataframe(df,width=700,height=250')
+st.dataframe(df,width=700,height=250)
 st.write(f'{len(df)} meals are recorded in this dataset.')
 st.write(df[['total_bill', 'tip']].describe())
 
