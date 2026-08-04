@@ -15,7 +15,7 @@ st.write(df[['total_bill', 'tip']].describe())
 
 st.subheader('Distribution of the total bill')
 fig,ax=plt.subplots()
-ax.hist(df['total bill'],bins=20)
+ax.hist(df['total_bill'], bins=20)
 ax.set_xlabel('Total Bill($)')
 ax.set_ylabel('Number of meals')
 st.pyplot(fig, clear_figure=True)
