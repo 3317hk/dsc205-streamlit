@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 st.title('Income by type of place')
-df = pd.read_csv('https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/mpg.csv')
+df = pd.read_csv('https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/CT-towns-income-census-2020.csv')
 
 if st.checkbox('Show raw data'):
     st.subheader('Raw data')
