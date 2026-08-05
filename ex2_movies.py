@@ -24,5 +24,5 @@ else:
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.set_xlabel('Population')
-ax.hist(df['Per Capita Income'])
+ax.hist(df['Number of Households'])
 st.pyplot(fig)
