@@ -15,11 +15,11 @@ st.subheader('Income by the type of place')
 origin = st.radio('Select type of place', ('Town', 'City', 'Borough'))
 
 if origin == 'Town':
-    df = df.loc[df['type']=='town']
+    df = df.loc[df['Type']=='town']
 elif origin == 'City':
-    df = df.loc[df['type']=='City']
+    df = df.loc[df['Type']=='City']
 else:
-    df = df.loc[df['type']=='Borough']
+    df = df.loc[df['Type']=='Borough']
 
 fig = plt.figure()
 ax = fig.add_subplot()
