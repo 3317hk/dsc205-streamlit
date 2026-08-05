@@ -24,5 +24,5 @@ else:
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.set_xlabel('type')
-ax.hist(df['Per Capita Income'])
+ax.hist(df['type'])
 st.pyplot(fig)
