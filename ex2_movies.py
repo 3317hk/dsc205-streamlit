@@ -2,27 +2,27 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
-df = pd.read_csv('https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/CT-towns-income-census-2020.csv')
+st.title('Income by type of place')
+df = pd.read_csv('https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/mpg.csv')
 
 if st.checkbox('Show raw data'):
     st.subheader('Raw data')
     st.write(df)
 
 st.markdown('---')
-st.subheader('Income difference')
+st.subheader('Income by the type of place')
 
-origin = st.radio('Select Income type', ('Population', 'Median Household Income','Median Family Income'))
+origin = st.radio('Select type of place', ('Town', 'City', 'Borough'))
 
-if origin == 'Population':
-    df = df.loc[df['origin']=='Per Capita Income']
-elif origin == 'Median Household Income':
-    df = df.loc[df['origin']=='Median Household Income']
+if origin == 'Town':
+    df = df.loc[df['type']=='town']
+elif origin == 'City':
+    df = df.loc[df['type']=='City']
 else:
-    df = df.loc[df['origin']=='Median Family Income']
+    df = df.loc[df['type']=='Borough']
 
 fig = plt.figure()
 ax = fig.add_subplot()
-ax.set_xlabel('Median household Income')
+ax.set_xlabel('Population')
 ax.hist(df['Per Capita Income'])
 st.pyplot(fig)
