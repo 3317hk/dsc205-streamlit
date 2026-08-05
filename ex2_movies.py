@@ -12,7 +12,7 @@ if st.checkbox('Show raw data'):
 st.markdown('---')
 st.subheader('Income difference')
 
-origin = st.radio('Select Income type', ('Population', 'Number of household'))
+origin = st.radio('Select Income type', ('Population', 'Median Household Income','Median Family Income'))
 
 if origin == 'Population':
     df = df.loc[df['origin']=='Per Capita Income']
