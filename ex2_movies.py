@@ -18,7 +18,7 @@ st.subheader("Income by the type of place")
 origin = st.radio("Select type of place", ("town", "City", "Borough"))
 
 # Filter using the matching case
-df_filtered = df.loc[df["Type"] == origin]
+df = df.loc[df["Type"] == origin]
 
 fig, ax = plt.subplots()
 ax.set_xlabel("Type")
