@@ -15,16 +15,15 @@ if st.checkbox("Show raw data"):
 st.markdown("---")
 st.subheader("Income by the type of place")
 
-# Select type of place
 origin = st.radio(
     "Select type of place",
     ("Town", "City", "Borough")
 )
 
-# Filter data
+
 df = df.loc[df["Type"] == origin]
 
-# Create histogram
+
 fig, ax = plt.subplots()
 
 ax.set_xlabel("Per Capita Income")
