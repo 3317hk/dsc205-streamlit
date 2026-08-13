@@ -20,11 +20,11 @@ df.columns = df.columns.str.strip()
 # Change these names if your CSV uses slightly different names
 county_col = "County"
 town_col = "Town"
-income_col = "Median Household Income"
+income_col = "Median household income"
 
 # Convert income to numeric
 df[income_col] = (
-    df['Median Household Income']
+    df['Median household income']
     .astype(str)
     .str.replace("$", "", regex=False)
     .str.replace(",", "", regex=False)
