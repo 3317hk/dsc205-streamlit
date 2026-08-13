@@ -23,5 +23,5 @@ df = df.loc[df["Type"] == origin]
 fig, ax = plt.subplots()
 ax.set_xlabel("Type")
 # Use a numeric or categorical column for the histogram, or bar chart if counting
-ax.hist(df_filtered["Per Capita Income"])  # Assuming you want to plot income
+ax.hist(df_filtered["Per capita income"])  # Assuming you want to plot income
 st.pyplot(fig)
