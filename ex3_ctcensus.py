@@ -24,7 +24,7 @@ income_col = "Median Household Income"
 
 # Convert income to numeric
 df[income_col] = (
-    df[income_col]
+    df['Median Household Income']
     .astype(str)
     .str.replace("$", "", regex=False)
     .str.replace(",", "", regex=False)
