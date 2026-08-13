@@ -8,31 +8,25 @@ url = "https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/CT-tow
 df = pd.read_csv(url)
 
 
-df['Per capita income'] = df['Per capita income'].str.replace('$', '').str.replace(',', '').astype(int)
-df['Median household income'] = df['Median household income'].str.replace('$', '').str.replace(',', '').astype(int)
-df['Median family income'] = df['Median family income'].str.replace('$', '').str.replace(',', '').astype(int)
-
-
-df["Median household income"] = pd.to_numeric(
-    df["Median household income"],
-    errors="coerce"
+df["Median household income"] = (
+    df["Median household income"]
+    .str.replace("$", "")
+    .str.replace(",", "")
+    .astype(int)
 )
 
-
-st.title("Connecticut Towns Census Data - 2020")
+st.title("Connecticut Town Census Data")
 
 
 
 st.header("Cities and Towns by County")
 
-counties = sorted(df["County"].unique())
-
-selected_county = st.selectbox(
+county = st.selectbox(
     "Select a county:",
-    counties
+    df["County"].unique()
 )
 
-county_data = df[df["County"] == selected_county]
+county_data = df[df["County"] == county]
 
 st.dataframe(
     county_data[["Place", "Median household income"]],
@@ -42,69 +36,49 @@ st.dataframe(
 
 
 
-st.header("Cities and Towns by Median Household Income")
+st.header("Cities and Towns by Income")
 
-minimum = int(df["Median household income"].min())
-maximum = int(df["Median household income"].max())
-
-income_range = st.slider(
-    "Select a minimum and maximum income:",
-    min_value=minimum,
-    max_value=maximum,
-    value=(minimum, maximum),
-    step=1000,
-    format="$%d"
+income = st.slider(
+    "Select income range:",
+    int(df["Median household income"].min()),
+    int(df["Median household income"].max()),
+    (
+        int(df["Median household income"].min()),
+        int(df["Median household income"].max())
+    )
 )
 
-min_income = income_range[0]
-max_income = income_range[1]
-
-filtered_data = df[
-    (df["Median household income"] >= min_income)
-    &
-    (df["Median household income"] <= max_income)
+income_data = df[
+    (df["Median household income"] >= income[0]) &
+    (df["Median household income"] <= income[1])
 ]
 
 st.dataframe(
-    filtered_data[["Place", "Median household income"]],
+    income_data[["Place", "Median household income"]],
     width=800,
     height=200
 )
 
 
+
 st.header("5 Highest and 5 Lowest Median Household Incomes")
 
-lowest_5 = df.nsmallest(
-    5,
-    "Median household income"
+lowest = df.nsmallest(5, "Median household income")
+highest = df.nlargest(5, "Median household income")
+
+graph_data = pd.concat([lowest, highest])
+
+plt.figure(figsize=(10, 5))
+
+plt.bar(
+    graph_data["Place"],
+    graph_data["Median household income"]
 )
 
-highest_5 = df.nlargest(
-    5,
-    "Median household income"
-)
-
-
-
-fig, ax = plt.subplots(figsize=(10, 5))
-
-ax.bar(
-    bar_data["Place"],
-    bar_data["Median household income"]
-)
-
-ax.set_xlabel("City/Town")
-ax.set_ylabel("Median Household Income ($)")
-
-ax.set_title(
-    "5 Highest and 5 Lowest Median Household Income"
-)
-
-plt.xticks(
-    rotation=45,
-    ha="right"
-)
+plt.xlabel("City/Town")
+plt.ylabel("Median Household Income")
+plt.xticks(rotation=45)
 
 plt.tight_layout()
 
-st.pyplot(fig)
+st.pyplot(plt)
