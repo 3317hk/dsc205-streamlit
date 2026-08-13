@@ -89,7 +89,7 @@ highest_5 = df.nlargest(
 fig, ax = plt.subplots(figsize=(10, 5))
 
 ax.bar(
-    bar_data["Place"],
+    bar_data["City"],
     bar_data["Median household income"]
 )
 
