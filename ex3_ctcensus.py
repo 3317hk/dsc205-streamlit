@@ -2,34 +2,26 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load data
+
 url = "https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/CT-towns-income-census-2020.csv"
 
 df = pd.read_csv(url)
 
-# Convert median household income from text to numbers
-df["Median household income"] = (
-    df["Median household income"]
-    .astype(str)
-    .str.replace("$", "", regex=False)
-    .str.replace(",", "", regex=False)
-    .str.strip()
-)
+
+df['Per capita income'] = df['Per capita income'].str.replace('$', '').str.replace(',', '').astype(int)
+df['Median household income'] = df['Median household income'].str.replace('$', '').str.replace(',', '').astype(int)
+df['Median family income'] = df['Median family income'].str.replace('$', '').str.replace(',', '').astype(int)
+
 
 df["Median household income"] = pd.to_numeric(
     df["Median household income"],
     errors="coerce"
 )
 
-# --------------------------------------------------
-# TITLE
-# --------------------------------------------------
 
 st.title("Connecticut Towns Census Data - 2020")
 
-# --------------------------------------------------
-# COUNTY SELECTBOX
-# --------------------------------------------------
+
 
 st.header("Cities and Towns by County")
 
@@ -48,9 +40,7 @@ st.dataframe(
     height=200
 )
 
-# --------------------------------------------------
-# INCOME SLIDER
-# --------------------------------------------------
+
 
 st.header("Cities and Towns by Median Household Income")
 
@@ -81,9 +71,6 @@ st.dataframe(
     height=200
 )
 
-# --------------------------------------------------
-# TOP 5 AND BOTTOM 5
-# --------------------------------------------------
 
 st.header("5 Highest and 5 Lowest Median Household Incomes")
 
@@ -97,14 +84,7 @@ highest_5 = df.nlargest(
     "Median household income"
 )
 
-bar_data = pd.concat([
-    lowest_5,
-    highest_5
-])
 
-# --------------------------------------------------
-# BAR GRAPH
-# --------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(10, 5))
 
