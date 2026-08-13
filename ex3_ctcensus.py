@@ -2,137 +2,128 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# ---------------------------------------------------------
-# Load the CT Census 2020 dataset
-# ---------------------------------------------------------
+# Load data
 url = "https://raw.githubusercontent.com/iantonios/dsc205/refs/heads/main/CT-towns-income-census-2020.csv"
 
 df = pd.read_csv(url)
 
-# Display the column names if needed for debugging
-# st.write(df.columns)
-
-# ---------------------------------------------------------
-# Clean column names
-# ---------------------------------------------------------
-df.columns = df.columns.str.strip()
-
-# Change these names if your CSV uses slightly different names
-county_col = "County"
-town_col = "Town"
-income_col = "Median household income"
-
-# Convert income to numeric
-df[income_col] = (
-    df['Median household income']
+# Convert median household income from text to numbers
+df["Median household income"] = (
+    df["Median household income"]
     .astype(str)
     .str.replace("$", "", regex=False)
     .str.replace(",", "", regex=False)
+    .str.strip()
 )
 
-df[income_col] = pd.to_numeric(df[income_col], errors="coerce")
+df["Median household income"] = pd.to_numeric(
+    df["Median household income"],
+    errors="coerce"
+)
 
-# Remove rows with missing values
-df = df.dropna(subset=[county_col, town_col, income_col])
+# --------------------------------------------------
+# TITLE
+# --------------------------------------------------
 
-# ---------------------------------------------------------
-# Streamlit title
-# ---------------------------------------------------------
 st.title("Connecticut Towns Census Data - 2020")
 
-st.write(
-    "Explore Connecticut cities and towns using county and "
-    "median household income filters."
-)
-
-# =========================================================
-# PART 1: County Selectbox
-# =========================================================
+# --------------------------------------------------
+# COUNTY SELECTBOX
+# --------------------------------------------------
 
 st.header("Cities and Towns by County")
 
-counties = sorted(df[county_col].unique())
+counties = sorted(df["County"].unique())
 
 selected_county = st.selectbox(
     "Select a county:",
     counties
 )
 
-county_df = df[df[county_col] == selected_county]
+county_data = df[df["County"] == selected_county]
 
 st.dataframe(
-    county_df[[town_col, income_col]],
+    county_data[["Place", "Median household income"]],
     width=800,
     height=200
 )
 
-# =========================================================
-# PART 2: Income Slider
-# =========================================================
+# --------------------------------------------------
+# INCOME SLIDER
+# --------------------------------------------------
 
 st.header("Cities and Towns by Median Household Income")
 
-minimum_income = int(df[income_col].min())
-maximum_income = int(df[income_col].max())
+minimum = int(df["Median household income"].min())
+maximum = int(df["Median household income"].max())
 
 income_range = st.slider(
-    "Select a minimum and maximum household income:",
-    min_value=minimum_income,
-    max_value=maximum_income,
-    value=(minimum_income, maximum_income),
+    "Select a minimum and maximum income:",
+    min_value=minimum,
+    max_value=maximum,
+    value=(minimum, maximum),
     step=1000,
     format="$%d"
 )
 
-min_income, max_income = income_range
+min_income = income_range[0]
+max_income = income_range[1]
 
-income_df = df[
-    (df[income_col] >= min_income) &
-    (df[income_col] <= max_income)
+filtered_data = df[
+    (df["Median household income"] >= min_income)
+    &
+    (df["Median household income"] <= max_income)
 ]
 
 st.dataframe(
-    income_df[[town_col, income_col]],
+    filtered_data[["Place", "Median household income"]],
     width=800,
     height=200
 )
 
-# =========================================================
-# PART 3: Top 5 and Bottom 5
-# =========================================================
+# --------------------------------------------------
+# TOP 5 AND BOTTOM 5
+# --------------------------------------------------
 
-st.header("Highest and Lowest Median Household Income")
+st.header("5 Highest and 5 Lowest Median Household Incomes")
 
-# Get the 5 highest-income towns
-highest_5 = df.nlargest(5, income_col)
+lowest_5 = df.nsmallest(
+    5,
+    "Median household income"
+)
 
-# Get the 5 lowest-income towns
-lowest_5 = df.nsmallest(5, income_col)
+highest_5 = df.nlargest(
+    5,
+    "Median household income"
+)
 
-# Combine them
-top_bottom = pd.concat([lowest_5, highest_5])
+bar_data = pd.concat([
+    lowest_5,
+    highest_5
+])
 
-# Sort for the graph
-top_bottom = top_bottom.sort_values(income_col)
-
-# ---------------------------------------------------------
-# Create bar graph
-# ---------------------------------------------------------
+# --------------------------------------------------
+# BAR GRAPH
+# --------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(10, 5))
 
 ax.bar(
-    top_bottom[town_col],
-    top_bottom[income_col]
+    bar_data["Place"],
+    bar_data["Median household income"]
 )
 
 ax.set_xlabel("City/Town")
 ax.set_ylabel("Median Household Income ($)")
+
 ax.set_title(
-    "5 Cities/Towns with Highest and Lowest Median Household Income"
+    "5 Highest and 5 Lowest Median Household Income"
 )
 
-plt.xticks(rotation=45, ha="right")
+plt.xticks(
+    rotation=45,
+    ha="right"
+)
 
 plt.tight_layout()
 
